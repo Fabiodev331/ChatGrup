@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "317799334143",
+    "project_id": "chatgrup-3acc7",
+    "storage_bucket": "chatgrup-3acc7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317799334143:android:aa1a3c8f938846f778ccca",
+        "android_client_info": {
+          "package_name": "com.chatgrup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "317799334143-g5pqidktpq24gme8nbefgjvbr1q6r4h7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0ZUiSilFTNchAC4r_ywMX95s2MpeEXyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317799334143-g5pqidktpq24gme8nbefgjvbr1q6r4h7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
