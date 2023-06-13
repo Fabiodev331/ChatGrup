@@ -9,12 +9,56 @@ import {
   ButtonText
 } from "./styles";
 
+import auth from '@react-native-firebase/auth';
+import { useNavigation } from "@react-navigation/native";
+
 function SignIn(){
-  const [nome, setNome] = useState('');
+  const navigation = useNavigation();
+
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [type, setType] = useState(false);
 
+  function handleLogin(){
+    if(type){
+      if(name === '' || email === '' || password === '') return;
+      
+      auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        user.user.updateProfile({
+          displayName: name
+        })
+        .then(() => {
+          navigation.goBack();
+        })
+      })
+      .catch((error) => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('Esse email já está sendo usado!');
+        }
+    
+        if (error.code === 'auth/invalid-email') {
+          console.log('Email inválido!');
+        }
+      })
+
+    }else{
+      if(email === '' || password === '') return;
+
+      auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch((error) => {
+        if (error.code === 'auth/invalid-email') {
+          console.log('Email inválido!');
+        }
+      })
+    }
+  }
   return(
     <Container>
       
@@ -24,8 +68,8 @@ function SignIn(){
       { type && <Input
         placeholder="Seu nome"
         placeholderTextColor="#69696b"
-        value={nome}
-        onChangeText={(text) => setNome(text)}
+        value={name}
+        onChangeText={(text) => setName(text)}
         />
       }
 
@@ -44,7 +88,10 @@ function SignIn(){
       onChangeText={(text) => setPassword(text)}
       />
 
-      <ButtonArea style={{ backgroundColor: type ? "#f53745" : "#57dd86" }} >
+      <ButtonArea 
+      style={{ backgroundColor: type ? "#f53745" : "#46d478" }} 
+      onPress={handleLogin}
+      >
         <ButtonText>{type ? "Cadastrar" : "Acessar"}</ButtonText>
       </ButtonArea>
 
