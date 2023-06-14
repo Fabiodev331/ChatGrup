@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Button } from "react-native";
+import React, { useState } from "react";
+import { Modal } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 import { 
@@ -13,11 +13,14 @@ import {
 } from "./styles";
 
 import auth from '@react-native-firebase/auth';
-
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FabButton from "../../components/FabButton";
+import ModalNewRoom from "../../components/ModalNewRoom";
 
 function ChatRoom(){
   const navigation = useNavigation();
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   function handleSignOut(){
     auth()
@@ -49,7 +52,12 @@ function ChatRoom(){
 
       </HeaderRoom>
       
-      <Button title="login" onPress={() => navigation.navigate('SignIn') } />
+      <FabButton setVisible={ () => setModalVisible(true) } />
+
+      <Modal visible={modalVisible} animationType="fade" transparent={true} >
+        <ModalNewRoom setVisible={ () => setModalVisible(false) } />
+      </Modal>
+
     </Container>
   )
 }

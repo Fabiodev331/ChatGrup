@@ -7,6 +7,7 @@ flex: 1;
 export const HeaderRoom = styled.View`
 flex-direction: row;
 justify-content: space-between;
+align-items: center;
 padding-top: 40px;
 padding-bottom: 20px;
 padding-left: 10px;
