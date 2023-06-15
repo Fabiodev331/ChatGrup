@@ -47,3 +47,11 @@ color: #FFF;
 font-size: 19px;
 font-weight: bold;
 `;
+export const ButtonBack = styled.TouchableOpacity`
+margin-top: 20px;
+`;
+
+export const ButtonBackText = styled.Text`
+font-size: 16px;
+color: #121212;
+`;
