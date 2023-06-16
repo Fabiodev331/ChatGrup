@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
 flex: 1;
+background-color: #FFF;
 `;
 
 export const HeaderRoom = styled.View`
@@ -34,5 +35,9 @@ padding-left: 10px;
 `;
 
 export const ButtonRight = styled.TouchableOpacity`
+
+`;
+
+export const FlatList = styled.FlatList`
 
 `;

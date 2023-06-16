@@ -11,8 +11,3 @@ position: absolute;
 bottom: 5%;
 right: 6%;
 `;
-
-export const TextButton = styled.Text`
-font-size: 26px;
-color: #FFF;
-`;

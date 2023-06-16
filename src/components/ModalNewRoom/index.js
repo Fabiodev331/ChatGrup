@@ -15,7 +15,7 @@ import {
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 
-function ModalNewRoom({ setVisible }){
+function ModalNewRoom({ setVisible, setUpdateScreen }){
     const [roomName, setRoomName] = useState('')
 
     const user = auth().currentUser.toJSON();
@@ -23,7 +23,24 @@ function ModalNewRoom({ setVisible }){
     function handleCreateRoom(){
         if(roomName === '') return;
 
-        CreateRoom();
+        firestore().collection('MESSAGE_THREADS')
+        .get()
+        .then((snapshot)=>{
+            let myThreads = 0;
+
+            snapshot.docs.map( docItem => {
+                if(docItem.data().owner === user.uid){
+                    myThreads += 1;
+                }
+            })
+
+            if(myThreads >= 4){
+                alert('Você já atingiu o limite de grupos por usuário.')
+            }else{
+                CreateRoom();
+            }
+
+        })
     }
 
     function CreateRoom(){
@@ -45,6 +62,7 @@ function ModalNewRoom({ setVisible }){
             })
             .then(()=>{
                 setVisible();
+                setUpdateScreen();
             })
         })
         .catch((error)=>{

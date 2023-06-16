@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal } from "react-native";
+import { Modal, View, ActivityIndicator, Alert } from "react-native";
 
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { 
@@ -9,7 +9,7 @@ import {
   ButtonLeft,
   Title,
   ButtonRight,
-  
+  FlatList
 } from "./styles";
 
 import auth from '@react-native-firebase/auth';
@@ -17,6 +17,7 @@ import firestore from "@react-native-firebase/firestore";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FabButton from "../../components/FabButton";
 import ModalNewRoom from "../../components/ModalNewRoom";
+import ChatList from "../../components/ChatList";
 
 function ChatRoom(){
   const navigation = useNavigation();
@@ -26,10 +27,10 @@ function ChatRoom(){
 
   const [threadsList, setThreadsList] = useState('');
   const [loading, setLoading] = useState(true);
+  const [updateScreen, setUpdateScreen] = useState(false);
 
   useEffect(()=> {
     const hasUser = auth().currentUser ? auth().currentUser.toJSON() : null;
-    console.log(hasUser)
 
     setUser(hasUser);
 
@@ -40,16 +41,16 @@ function ChatRoom(){
 
     function getChat(){
       firestore().collection('MESSAGE_THREADS')
-      .orderBy('lastMessage.creaedAd', 'desc')
+      .orderBy('lastMessage.createdAt', 'desc')
       .limit(10)
       .get()
       .then((snapshot)=>{
-        const threads = snapshot.docs.map( docSnapshot => {
+        const threads = snapshot.docs.map( documentSnapshot => {
           return {
-            _id: docSnapshot.id,
+            _id: documentSnapshot.id,
             name: '',
             lastMessage: { text: '' },
-            ...docSnapshot.data()
+            ...documentSnapshot.data()
           }
         })
 
@@ -67,7 +68,7 @@ function ChatRoom(){
       isActive = false;
     }
 
-  },[isFocused])
+  },[isFocused, updateScreen])
 
 
   function handleSignOut(){
@@ -80,6 +81,43 @@ function ChatRoom(){
     .catch(() => {
       console.log("Não possui nenhum usuário");
     })
+  }
+
+  function deleteRoom(ownerId, idRoom){
+    if(ownerId !== user?.uid) return;
+    Alert.alert(
+      "Atenção!",
+      "Você tem certeza que deseja deletar essa sala?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+          style: "cancel"
+        },
+        {
+          text: "Deletar",
+          onPress: () => handleDelete(idRoom),
+        }
+      ]
+    )
+  }
+
+  async function handleDelete(idRoom){
+    await firestore()
+    .collection("MESSAGE_THREADS")
+    .doc(idRoom)
+    .delete();
+
+    setUpdateScreen(!updateScreen);
+  }
+
+
+  if(loading){
+    return(
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
+        <ActivityIndicator size={45} color='#2e54d4' />
+      </View>
+    )
   }
 
   return(
@@ -102,11 +140,27 @@ function ChatRoom(){
         </ButtonRight>
 
       </HeaderRoom>
+
+      <FlatList
+        data={threadsList}
+        keyExtractor={ item => item._id}
+        showsVerticalScrollIndicator={false}
+        renderItem={ ({item}) => (
+          <ChatList 
+          data={item} 
+          deleteRoom={ () => deleteRoom(item.owner, item._id)}
+          userStatus={user}
+          />
+        ) }
+      />
       
       <FabButton setVisible={ () => setModalVisible(true)} userStatus={user} />
 
       <Modal visible={modalVisible} animationType="fade" transparent={true} >
-        <ModalNewRoom setVisible={ () => setModalVisible(false) } />
+        <ModalNewRoom 
+        setVisible={ () => setModalVisible(false) } 
+        setUpdateScreen={() => setUpdateScreen(!updateScreen)}
+        />
       </Modal>
 
     </Container>

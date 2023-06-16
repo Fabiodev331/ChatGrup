@@ -1,9 +1,9 @@
 import React from "react";
 import { 
     AreaButton,
-    TextButton
-
 } from "./styles";
+
+import Feather from "react-native-vector-icons/Feather";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -19,7 +19,7 @@ function FabButton({ setVisible, userStatus }){
         activeOpacity={0.8}
         onPress={handleNavigationButton}
         >
-            <TextButton>+</TextButton>
+            <Feather name='plus' size={35} color='#FFF' />
         </AreaButton>
     )
 }
