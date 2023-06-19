@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
+import { 
+  Container,
+  FlatList,
+  KeyboardAvoidingView,
+  ContainerInput,
+  MainInput,
+  TextInput
+} from "./styles";
 
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+
+import ChatMessage from "../../components/ChatMessage";
 
 function Messages({ route }){
   const { thread } = route.params;
@@ -43,9 +53,27 @@ function Messages({ route }){
   }, [] );
 
   return(
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
-      <Text>{ thread.name }</Text>
-    </View>
+    <Container>
+      <FlatList
+        data={message}
+        keyExtractor={item => item._id}
+        renderItem={({item}) => <ChatMessage data={item} /> }
+      />
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? "padding" : "height"}
+        keyboardVerticalOffset={100}
+      >
+        <ContainerInput>
+          <MainInput>
+            <TextInput
+              placeholder="Sua mensagem..."
+            />
+              </MainInput>
+        </ContainerInput>
+
+      </KeyboardAvoidingView>
+    </Container>
   )
 }
 
