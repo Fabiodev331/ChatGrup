@@ -32,3 +32,7 @@ align-items: center;
 margin-right: 10px;
 border-radius: 5px;
 `;
+
+export const FlatList = styled.FlatList`
+
+`;
