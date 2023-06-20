@@ -135,7 +135,7 @@ function ChatRoom(){
 
         </HeaderRoomLeft>
 
-        <ButtonRight>
+        <ButtonRight onPress={() => navigation.navigate("Search")}>
           <MaterialIcons name="search" size={28} color="#FFF" />
         </ButtonRight>
 
